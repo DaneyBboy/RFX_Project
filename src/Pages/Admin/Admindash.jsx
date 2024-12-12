@@ -14,7 +14,7 @@ export default function Admindash() {
       <br />
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">Rfx Admin Dashboard</Typography>
+          <Typography variant="h6">Admin Dashboard</Typography>
         </Toolbar>
       </AppBar>
       <Container style={{ marginTop: "20px" }}>
