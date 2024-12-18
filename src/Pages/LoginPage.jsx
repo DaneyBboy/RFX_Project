@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import image from "/coding/RFX_Project/my-rfx/src/Images/Dashboard_Login.jpg";
+import image from "../Images/Dashboard_Login.jpg";
 import { LoginContext } from "../Context/Context";
 
 // Styled components

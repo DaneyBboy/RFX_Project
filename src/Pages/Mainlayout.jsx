@@ -6,7 +6,7 @@ import Vendorlayout from './Vendorlayout';
 
 export default function Mainlayout() {
 
-  const {loggedIn, role} = React.useContext(LoginContext)
+  const {loggedIn, role} = useContext(LoginContext)
 
 // const loggedIn = true
 

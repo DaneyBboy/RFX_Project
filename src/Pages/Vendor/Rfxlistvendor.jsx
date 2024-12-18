@@ -1,30 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Toolbar, Typography, Container, Paper, Grid2 } from '@mui/material';
 
-
-
 export default function Rfxlistvendor() {
+  const [itemData, setItemData] = useState([]);
 
-  const itemData = [ 
-    {
-      id: "123",
-      title: "Sample Item Title 1",
-      description: "This is a detailed description of the item. It provides insights and information relevant to the item.",
-      createdDate: "2024-01-01",
-      status: "Active"
-    },
-    {
-      id: "1234",
-      title: "Sample Item Title 2",
-      description: "This is another detailed description of the item. It provides insights and information relevant to the item.",
-      createdDate: "2024-01-02",
-      status: "Inactive"
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:4000/rfx/list');
+        const results = await response.json();
+
+
+        if (Array.isArray(results)) {
+
+          const formattedResults = results.map(item => ({
+            ...item,
+            dateIssued: new Date(item.dateIssued).toISOString().split('T')[0],
+            submissionDate: new Date(item.submissionDate).toISOString().split('T')[0],
+          }));
+
+          setItemData(formattedResults);
+        } else {
+          console.error('Fetched data is not an array:', results);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
-  ];
-  
+
+    fetchData();
+  }, []); // Empty dependency array to fetch data only once on component mount
+
   return (
     <div>
-       <br />
+      <br />
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">Listing of RFx</Typography>
@@ -32,24 +41,25 @@ export default function Rfxlistvendor() {
       </AppBar>
       <Container style={{ marginTop: '20px' }}>
         {itemData.map((item) => (
-          <Paper key={item.id} style={{ padding: '20px', marginBottom: '20px' }}>
+          <Paper key={item.rfxNumber} style={{ padding: '20px', marginBottom: '20px' }}>
+            <Typography variant="h3">{item.rfxNumber}</Typography>
             <Typography variant="h4">{item.title}</Typography>
             <Typography variant="body1" style={{ marginTop: '10px' }}>
-              {item.description}
+              {item.purpose}
             </Typography>
             <Grid2 container spacing={2} style={{ marginTop: '20px' }}>
               <Grid2 item xs={12} sm={6}>
                 <Typography variant="h6">Created Date:</Typography>
-                <Typography variant="body1">{item.createdDate}</Typography>
+                <Typography variant="body1">{item.dateIssued}</Typography>
               </Grid2>
               <Grid2 item xs={12} sm={6}>
-                <Typography variant="h6">Status:</Typography>
-                <Typography variant="body1">{item.status}</Typography>
+                <Typography variant="h6">Submission Date:</Typography>
+                <Typography variant="body1">{item.submissionDate}</Typography>
               </Grid2>
             </Grid2>
           </Paper>
         ))}
       </Container>
     </div>
-  )
+  );
 }

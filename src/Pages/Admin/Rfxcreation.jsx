@@ -54,9 +54,22 @@ export default function Rfxcreation() {
 
   const handleClick = () => {
     if (validateForm()) {
-      navigate("/pricecreate");
+      async function createRfx() {
+        const response = await fetch('http://localhost:4000/rfx/create', {
+          method: "POST",
+          body: JSON.stringify(formData),
+          headers:{
+            "content-type":"application/json"
+          }
+        });
+        console.log(response)
+        navigate("/pricecreate");
+      }
+      createRfx()
     }
   };
+
+ 
 
   return (
     <div>
@@ -79,9 +92,10 @@ export default function Rfxcreation() {
             onChange={handleChange}
             error={!!errors.proposalCriteria}
           >
-            <MenuItem value="rfp">Request for Proposal</MenuItem>
-            <MenuItem value="rfi">Request for Information</MenuItem>
-            <MenuItem value="rfq">Request for Quotation</MenuItem>
+
+            <MenuItem value="Request for Proposal">Request for Proposal</MenuItem>
+            <MenuItem value="Request for Information">Request for Information</MenuItem>
+            <MenuItem value="Request for Quotation">Request for Quotation</MenuItem>
           </Select>
           {errors.proposalCriteria && (
             <Typography color="error">{errors.proposalCriteria}</Typography>
@@ -213,6 +227,8 @@ export default function Rfxcreation() {
           >
             Submit
           </Button>
+
+
         </FormControl>
       </div>
     </div>
