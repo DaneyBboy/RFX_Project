@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import image from "../Images/Dashboard_Login.jpg";
 import { LoginContext } from "../Context/Context";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const Container = styled(Box)(({ theme }) => ({
@@ -13,6 +14,7 @@ const Container = styled(Box)(({ theme }) => ({
 const FormSection = styled(Box)({
   flex: 1,
   display: "flex",
+  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#f5f5f5",
@@ -42,21 +44,46 @@ const LoginPage = () => {
   const { loggedIn, setLoggedin, login } = useContext(LoginContext);
   console.log("context variable", loggedIn);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const[formValues , setFormvalues] = useState({
+    email:"",
+    password:"",
+    error:"",
+    success:""
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormvalues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+
+  
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (email === "admin" && password === "Admin@123") {
+    const reponse = await fetch('http://localhost:4000/auth/login',{
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify(formValues)
+    })
+
+    if (reponse.ok) {
       login('admin');
       setSuccess("Login successful!");
-    }else if(email === "vendor" && password === "Vendor@123"){
-        login("vendor"); 
-        setSuccess("Login successful!");
-    } 
+    } else if (email === "vendor" && password === "Vendor@123") {
+      login("vendor");
+      setSuccess("Login successful!");
+    }
     else {
       // Simulate successful login
       setLoggedin(false);
@@ -69,6 +96,10 @@ const LoginPage = () => {
     // SEND VALUES TO DATABASE AND VALIDATE
   };
 
+  const handleSignup = () => {
+    navigate('/signup')
+  }
+
   return (
     <Container>
       <FormSection style={{ backgroundImage: `url(${image})` }}>
@@ -78,30 +109,37 @@ const LoginPage = () => {
           </Typography>
           <TextField
             label="Email"
+            name="email"
             variant="outlined"
             fullWidth
             margin="normal"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formValues.email}
+            onChange={handleChange}
           />
           <TextField
             label="Password"
+            name="password"
             type="password"
             variant="outlined"
             fullWidth
             margin="normal"
             required
-            onChange={(e) => setPassword(e.target.value)}
+            value={formValues.password}
+            onChange={handleChange}
           />
           <Button variant="contained" color="primary" type="submit" fullWidth>
             Submit
           </Button>
           {error && <p style={styles.error}>{error}</p>}
           {success && <p style={styles.success}>{success}</p>}
+
         </LoginForm>
+        <Button onClick={handleSignup} style={{display:"block", margin:"10px auto"}} variant="contained" color="primary">Create New User </Button>
       </FormSection>
+      
     </Container>
+    
   );
 };
 
