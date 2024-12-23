@@ -129,6 +129,7 @@ return (
           margin="normal"
           required
           value={formValues.role}
+          placeholder="type admin or vendor"
           onChange={handleChange}
         />
         <Button variant="contained" color="primary" type="submit" fullWidth>

@@ -4,6 +4,8 @@ import { styled } from "@mui/system";
 import image from "../Images/Dashboard_Login.jpg";
 import { LoginContext } from "../Context/Context";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+
 
 // Styled components
 const Container = styled(Box)(({ theme }) => ({
@@ -41,16 +43,17 @@ const styles = {
 };
 
 const LoginPage = () => {
-  const { loggedIn, setLoggedin, login } = useContext(LoginContext);
+  const { loggedIn, login } = useContext(LoginContext);
   console.log("context variable", loggedIn);
+
 
   const navigate = useNavigate();
 
-  const[formValues , setFormvalues] = useState({
-    email:"",
-    password:"",
-    error:"",
-    success:""
+  const [formValues, setFormvalues] = useState({
+    email: "",
+    password: "",
+    error: "",
+    success: ""
   })
 
   const handleChange = (e) => {
@@ -62,38 +65,42 @@ const LoginPage = () => {
   };
 
 
-  
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const reponse = await fetch('http://localhost:4000/auth/login',{
-      method:"POST",
-      headers:{
-        "content-type":"application/json"
+    const response = await fetch('http://localhost:4000/auth/login', {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
       },
-      body:JSON.stringify(formValues)
+      body: JSON.stringify(formValues)
     })
 
-    if (reponse.ok) {
-      login('admin');
-      setSuccess("Login successful!");
-    } else if (email === "vendor" && password === "Vendor@123") {
-      login("vendor");
-      setSuccess("Login successful!");
+    const data = await response.json();
+
+    if (response.status === 200) {
+      localStorage.setItem('authToken', data.token);
+      const decoded = jwtDecode(data.token);
+
+      if (decoded.role === 'admin') {
+        login('admin');
+
+      } else if (decoded.role === 'vendor') {
+        login('vendor');
+
+      } else {
+        alert(data.message);
+
+      }
     }
+
     else {
-      // Simulate successful login
-      setLoggedin(false);
-      setSuccess("");
-      setError("Invalid email or password. Please try again.");
+
+      alert(data.message);
+
     }
-    // Handle login logic here
-    console.log("Form submitted");
-    console.log("context variable", loggedIn);
-    // SEND VALUES TO DATABASE AND VALIDATE
+
   };
 
   const handleSignup = () => {
@@ -131,15 +138,15 @@ const LoginPage = () => {
           <Button variant="contained" color="primary" type="submit" fullWidth>
             Submit
           </Button>
-          {error && <p style={styles.error}>{error}</p>}
-          {success && <p style={styles.success}>{success}</p>}
+          {formValues.error && <p style={styles.error}>{formValues.error}</p>}
+          {formValues.success && <p style={styles.success}>{formValues.success}</p>}
 
         </LoginForm>
-        <Button onClick={handleSignup} style={{display:"block", margin:"10px auto"}} variant="contained" color="primary">Create New User </Button>
+        <Button onClick={handleSignup} style={{ display: "block", margin: "10px auto" }} variant="contained" color="primary">Create New User </Button>
       </FormSection>
-      
+
     </Container>
-    
+
   );
 };
 

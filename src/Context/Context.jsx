@@ -37,6 +37,7 @@ export const LoginProvider = ({ children }) => {
   // Function to handle logout
   function logout() {
     setLoggedin(false);
+    localStorage.clear()
     setRole(""); // Clear role on logout
   }
 
