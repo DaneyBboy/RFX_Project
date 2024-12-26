@@ -16,9 +16,9 @@ export default function Mainlayout() {
     <div>
 
       {!loggedIn && <Routes>
-        <Route path='/' element={<LoginPage />}/>
-        <Route path='/signup' element={<SignUP/>}/>
-      </Routes>  }
+        <Route path='/' element={<LoginPage />} />
+        <Route path='/signup' element={<SignUP />} />
+      </Routes>}
       {loggedIn && role === 'admin' && <Adminlayout />}
       {loggedIn && role === 'vendor' && <Vendorlayout />}:
 

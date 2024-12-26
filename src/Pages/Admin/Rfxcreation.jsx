@@ -55,15 +55,28 @@ export default function Rfxcreation() {
   const handleClick = () => {
     if (validateForm()) {
       async function createRfx() {
+        const token = JSON.parse(localStorage.getItem('authToken'));
+        console.log('Token',token)
+        if (!token) {
+          console.error('No token found');
+          return; // Handle the case where no token is available
+      }
         const response = await fetch('http://localhost:4000/rfx/create', {
           method: "POST",
           body: JSON.stringify(formData),
           headers:{
-            "content-type":"application/json"
+            "content-type":"application/json",
+            "Authorization": `Bearer ${token}`
           }
         });
-        console.log(response)
-        navigate("/pricecreate");
+        console.log(response.headers);
+        if(response.ok){
+          navigate("/pricecreate");
+
+        }else {
+          console.error("Failed to create RFx:", response.statusText);
+        }
+        
       }
       createRfx()
     }

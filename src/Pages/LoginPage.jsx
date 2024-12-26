@@ -43,8 +43,8 @@ const styles = {
 };
 
 const LoginPage = () => {
-  const { loggedIn, login } = useContext(LoginContext);
-  console.log("context variable", loggedIn);
+  const {login } = useContext(LoginContext);
+
 
 
   const navigate = useNavigate();
@@ -69,10 +69,13 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    
+
     const response = await fetch('http://localhost:4000/auth/login', {
       method: "POST",
       headers: {
-        "content-type": "application/json"
+        "content-type": "application/json",
+        
       },
       body: JSON.stringify(formValues)
     })
@@ -80,7 +83,7 @@ const LoginPage = () => {
     const data = await response.json();
 
     if (response.status === 200) {
-      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('authToken', JSON.stringify(data.token));
       const decoded = jwtDecode(data.token);
 
       if (decoded.role === 'admin') {
