@@ -4,9 +4,10 @@ import { Container } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
 import Rfxcreation from './Admin/Rfxcreation'
 import Admindash from './Admin/Admindash'
-import RfxlistAdmin from './Admin/RfxlistAdmin'
 import EvaluateRFx from './Admin/EvaluateRFx'
 import AdminPrice from './Admin/AdminPrice'
+import Rfxlist from './Rfxlist'
+import Rfxdetail from './Rfxdetail'
 
 
 export default function Adminlayout() {
@@ -19,9 +20,10 @@ export default function Adminlayout() {
         <Routes>
         <Route path='/' element={<Admindash />} />
           <Route path='/createrfx' element={<Rfxcreation />} />
-          <Route path='/listadmin' element={<RfxlistAdmin />} />
+          <Route path='/listrfx' element={<Rfxlist />} />
           <Route path='/manageadmin' element={<EvaluateRFx />} />
           <Route path='/pricecreate' element={<AdminPrice />} />
+          <Route path='/number/:rfxNumber' element={<Rfxdetail />} />
         </Routes>
       </Container>
       <Adminfooter />     

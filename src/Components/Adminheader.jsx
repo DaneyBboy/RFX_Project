@@ -35,7 +35,7 @@ export default function Adminheader() {
               <CreateIcon /> Create RFx
             </Button>
           </Link>
-          <Link className="link" to="/listadmin">
+          <Link className="link" to="/listrfx">
             <Button color="inherit">
               {" "}
               <FormatListBulletedIcon /> RFx Listing

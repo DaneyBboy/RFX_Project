@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Button,
-  FormControl,
-  MenuItem,
-  TextField,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import {AppBar, Button, FormControl, MenuItem, TextField, Toolbar, Typography,} from "@mui/material";
 import { Select } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 export default function Rfxcreation() {
   const navigate = useNavigate();
@@ -24,6 +30,7 @@ export default function Rfxcreation() {
     projectGoals: "",
     projectSummary: "",
     scopeOfWork: "",
+    fileUpload:null
   });
 
   const [errors, setErrors] = useState({});
@@ -35,7 +42,13 @@ export default function Rfxcreation() {
       [name]: value,
     }));
   };
-
+  const handleFilechange = (e) => {
+    setFormData({
+      ...formData, 
+      fileUpload: e.target.files[0]
+    });
+    console.log(formData.fileUpload);
+  };
   const validateForm = () => {
     const newErrors = {};
     if (!formData.proposalCriteria) newErrors.proposalCriteria = "Required";
@@ -52,37 +65,52 @@ export default function Rfxcreation() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleClick = () => {
+  const handleClick =  () => {
+
+    const form = new FormData()
+    form.append('proposalCriteria', formData.proposalCriteria);
+    form.append('rfxNumber', formData.rfxNumber);
+    form.append('dateIssued',formData.dateIssued);
+    form.append('contactPerson',formData.contactPerson);
+    form.append('submissionDate', formData.submissionDate);
+    form.append('purpose', formData.purpose);
+    form.append('projectGoals', formData.projectGoals);
+    form.append('scopeOfWork', formData.scopeOfWork);
+    form.append('fileUpload', formData.fileUpload);
+    form.append('fileName',formData.fileUpload.name)
+
+    
     if (validateForm()) {
       async function createRfx() {
         const token = JSON.parse(localStorage.getItem('authToken'));
-        console.log('Token',token)
+
         if (!token) {
           console.error('No token found');
           return; // Handle the case where no token is available
-      }
-        const response = await fetch('http://localhost:4000/rfx/create', {
+        }
+        const response = await fetch('http://localhost:4000/rfx/createnew', {
           method: "POST",
-          body: JSON.stringify(formData),
-          headers:{
-            "content-type":"application/json",
-            "Authorization": `Bearer ${token}`
-          }
+          body: form,
+          // headers: {
+          //   "content-type": "application/json",
+          //   "Authorization": `Bearer ${token}`
+          // }
         });
-        console.log(response.headers);
-        if(response.ok){
+
+        if (response.ok) {
           navigate("/pricecreate");
 
-        }else {
+        } else {
           console.error("Failed to create RFx:", response.statusText);
         }
-        
+
       }
       createRfx()
     }
+    console.log(formData)
   };
 
- 
+
 
   return (
     <div>
@@ -230,14 +258,27 @@ export default function Rfxcreation() {
             error={!!errors.scopeOfWork}
             helperText={errors.scopeOfWork}
           />
+          <div style={{margin:"10px 0px"}}><Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}>
+            Upload files
+            <VisuallyHiddenInput
+              type="file"
+              onChange={handleFilechange}
+              multiple
+            />
+          </Button></div>
+          
 
           <Button
             sx={{ width: "fit-content" }}
             variant="contained"
             color="primary"
             type="submit"
-            onClick={handleClick}
-          >
+            onClick={handleClick}>
             Submit
           </Button>
 
