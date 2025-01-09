@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Container, Paper, Grid2 } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Paper, Grid } from '@mui/material';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 export default function Rfx() {
@@ -48,16 +48,16 @@ export default function Rfx() {
             <Typography variant="body1" style={{ marginTop: '10px' }}>
               {item.purpose}
             </Typography>
-            <Grid2 container spacing={2} style={{ marginTop: '20px' }}>
-              <Grid2 item xs={12} sm={6}>
+            <Grid container spacing={2} style={{ marginTop: '20px' }}>
+              <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Created Date:</Typography>
                 <Typography variant="body1">{item.dateIssued}</Typography>
-              </Grid2>
-              <Grid2 item xs={12} sm={6}>
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Due Date:</Typography>
                 <Typography variant="body1">{item.submissionDate}</Typography>
-              </Grid2>
-            </Grid2>
+              </Grid>
+            </Grid>
           </Paper>
         ))}
       </Container>

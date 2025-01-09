@@ -1,4 +1,5 @@
 import {
+  FormControl,
   Paper,
   Table,
   TableBody,
@@ -7,89 +8,187 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Button,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 
 export default function AdminPrice() {
-  let priceData = [{
-    sr: 1,
-    name: "Laptop",
-    description: "4GB RAM 1TB SSD",
-    quantity: "50",
-    uom: "Per Unit",
-  },
-  {sr: 2,
-  name: "Desktop",
-  description: "8GB RAM 1TB SSD",
-  quantity: "10",
-  uom: "Per Unit",
-},
-{sr: 3,
-  name: "Dell Workstation",
-  description: "16GB RAM 2TB SSD",
-  quantity: "5",
-  uom: "Per Unit",
-}]
-  let data = priceData;
+  const [formData, setFormData] = useState([
+    {
+      Srno: "1",
+      itemName: "",
+      description: "",
+      quantity: "",
+      uom: "",
+      unitRate: "",
+    },
+  ]);
+
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedData = [...formData];
+    updatedData[index][name] = value;
+    setFormData(updatedData);
+  };
+
+  // Function to add a new row
+  const addRow = () => {
+    const newRow = {
+      Srno: (formData.length + 1).toString(),
+      itemName: "",
+      description: "",
+      quantity: "",
+      uom: "",
+      unitRate: "",
+    };
+    setFormData([...formData, newRow]);
+  };
+
+  // Handle form submission
+  const handleClick = async () => {
+    try {
+      // Prepare data to send to the backend
+      const dataToSubmit = formData.map((item) => ({
+        Srno: item.Srno,
+        itemName: item.itemName,
+        description: item.description,
+        quantity: item.quantity,
+        uom: item.uom,
+        unitRate: item.unitRate,
+        totalPrice: item.quantity && item.unitRate
+          ? (parseFloat(item.quantity) * parseFloat(item.unitRate)).toFixed(2)
+          : "0.00",
+      }));
+
+      // Send data to backend using fetch
+      const response = await fetch("http://localhost:5000/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items: dataToSubmit }), // Sending data as JSON
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert("Form submitted successfully!");
+        console.log(result); // Handle success response from server
+      } else {
+        alert("Failed to submit form.");
+      }
+    } catch (error) {
+      alert("Error submitting form: " + error.message);
+    }
+  };
 
   return (
     <div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>S.No</TableCell>
-              <TableCell>Item Name</TableCell>
-              <TableCell>Item Description</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Unit of Measurement</TableCell>
-              <TableCell>Unit Price</TableCell>
-              <TableCell>Total Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((item) => ( 
+      <FormControl>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
               <TableRow>
-                <TableCell>
-                  <TextField value={item.sr}  multiline minRows={1} variant="outlined" >
-                    
-                    </TextField>
-                </TableCell>
-                <TableCell>
-                  <TextField value={item.name}
-                    multiline
-                    minRows={1}
-                    variant="outlined"
-                  ></TextField>
-                </TableCell>
-                <TableCell>
-                  <TextField value={item.description}
-                    multiline
-                    minRows={1}
-                    variant="outlined"
-                  ></TextField>
-                </TableCell>
-                <TableCell>
-                  <TextField value={item.quantity}
-                    multiline
-                    minRows={1}
-                    variant="outlined"
-                  ></TextField>
-                </TableCell>
-                <TableCell>
-                  <TextField value={item.uom}
-                    multiline
-                    minRows={1}
-                    variant="outlined"
-                  ></TextField>
-                </TableCell>
-              </TableRow> ))}
-              
-             
-            
-          </TableBody>
-        </Table>
-      </TableContainer>
+                <TableCell>S.No</TableCell>
+                <TableCell>Item Name</TableCell>
+                <TableCell>Item Description</TableCell>
+                <TableCell>Quantity</TableCell>
+                <TableCell>Unit of Measurement</TableCell>
+                <TableCell>Unit Price</TableCell>
+                <TableCell>Total Price</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {formData.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <TextField
+                      value={item.Srno}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="Srno"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={item.itemName}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="itemName"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={item.description}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="description"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={item.quantity}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="quantity"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={item.uom}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="uom"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      value={item.unitRate}
+                      multiline
+                      minRows={1}
+                      variant="outlined"
+                      name="unitRate"
+                      onChange={(e) => handleChange(e, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {/* Total Price Calculation */}
+                    {item.quantity && item.unitRate
+                      ? (parseFloat(item.quantity) * parseFloat(item.unitRate)).toFixed(2)
+                      : "0.00"}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* Correcting the sx prop */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={addRow}
+          style={{ width: "103px", margin:"10px 0px auto auto " }}
+        >
+          Add Row
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleClick}
+          style={{ marginTop: "16px", marginLeft: "10px" }}
+        >
+          Submit
+        </Button>
+      </FormControl>
     </div>
   );
 }

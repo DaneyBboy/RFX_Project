@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Use useParams to get the rfxNumber from URL
-import { Container, Paper, Typography, Grid, Button, Box } from '@mui/material';
+import { Container, Paper, Typography, Grid, Button, Box} from '@mui/material';
 
 
 export default function RfxDetail() {
@@ -129,7 +129,7 @@ export default function RfxDetail() {
                     bgcolor: 'primary.dark',
                   },
                 }}
-                href={rfxData.fileUpload}
+                href={rfxData.fileUrl}
                 download
               >
                 Download File
