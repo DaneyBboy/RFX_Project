@@ -83,6 +83,7 @@ export default function Rfxcreation() {
     if (validateForm()) {
       async function createRfx() {
         const token = JSON.parse(localStorage.getItem('authToken'));
+        
 
         if (!token) {
           console.error('No token found');
@@ -98,6 +99,7 @@ export default function Rfxcreation() {
         });
 
         if (response.ok) {
+          JSON.stringify(localStorage.setItem('rfxNumber', formData.rfxNumber))
           navigate("/pricecreate");
 
         } else {

@@ -21,8 +21,6 @@ export default function Mainlayout() {
       </Routes>}
       {loggedIn && role === 'admin' && <Adminlayout />}
       {loggedIn && role === 'vendor' && <Vendorlayout />}:
-
-
     </div>
   )
 }

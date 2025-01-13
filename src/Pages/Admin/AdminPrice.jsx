@@ -11,8 +11,11 @@ import {
   Button,
 } from "@mui/material";
 import React, { useState } from "react";
+import BasicModal from "/home/daney/Desktop/Rfx_project/RFX_Project/src/Components/BasicModal.jsx"
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPrice() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState([
     {
       Srno: "1",
@@ -23,7 +26,7 @@ export default function AdminPrice() {
       unitRate: "",
     },
   ]);
-
+  const [modalOpen, setModalOpen] = useState(false);
   const handleChange = (e, index) => {
     const { name, value } = e.target;
     const updatedData = [...formData];
@@ -49,30 +52,34 @@ export default function AdminPrice() {
     try {
       // Prepare data to send to the backend
       const dataToSubmit = formData.map((item) => ({
+        rfxNumber: JSON.parse(localStorage.getItem('rfxNumber')),
         Srno: item.Srno,
         itemName: item.itemName,
         description: item.description,
-        quantity: item.quantity,
-        uom: item.uom,
-        unitRate: item.unitRate,
+        quantity: parseFloat (item.quantity) || 0,
+        uom: item.uom || 0,
+        unitRate: parseFloat(item.unitRate),
         totalPrice: item.quantity && item.unitRate
           ? (parseFloat(item.quantity) * parseFloat(item.unitRate)).toFixed(2)
-          : "0.00",
+          : 0.00,
       }));
 
       // Send data to backend using fetch
-      const response = await fetch("http://localhost:5000/api/submit", {
+      const response = await fetch("http://localhost:4000/price/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items: dataToSubmit }), // Sending data as JSON
+        body: JSON.stringify(dataToSubmit), // Sending data as JSON
       });
 
       if (response.ok) {
         const result = await response.json();
-        alert("Form submitted successfully!");
+        setModalOpen(true);
         console.log(result); // Handle success response from server
+        setTimeout(() => navigate("/listrfx"), 3000)
+        
+        
       } else {
         alert("Failed to submit form.");
       }
@@ -158,6 +165,7 @@ export default function AdminPrice() {
                       variant="outlined"
                       name="unitRate"
                       onChange={(e) => handleChange(e, index)}
+                      disabled
                     />
                   </TableCell>
                   <TableCell>
@@ -189,6 +197,7 @@ export default function AdminPrice() {
           Submit
         </Button>
       </FormControl>
+      <BasicModal open={modalOpen} handleClose={() => setModalOpen(false)} />
     </div>
   );
 }
