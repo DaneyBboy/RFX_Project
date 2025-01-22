@@ -21,6 +21,7 @@ export default function Adminheader() {
   function handleClick() {
     navigate("/");
   }
+ 
 
   return (
     <Box>
@@ -48,8 +49,10 @@ export default function Adminheader() {
             </Button>
           </Link>
 
-          <Button onClick={() => logout()} color="inherit">
-            <LogoutIcon onClick={handleClick}  />
+          <Button onClick={() => {
+            logout();
+            }} color="inherit">
+            <LogoutIcon  />
           </Button>
                     
           <Button onClick={handleClick} color="inherit">

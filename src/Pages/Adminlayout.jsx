@@ -10,6 +10,7 @@ import Rfxlist from './Rfxlist'
 import Rfxdetail from './Rfxdetail'
 
 
+
 export default function Adminlayout() {
 
   return (

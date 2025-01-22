@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {AppBar, Button, FormControl, MenuItem, TextField, Toolbar, Typography,} from "@mui/material";
 import { Select } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,14 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+
 export default function Rfxcreation() {
+
+   // Remove `rfxNumber` when the component first renders
+ useEffect(() => {
+  localStorage.removeItem("rfxNumber");
+  console.log("rfxNumber removed from local storage");
+}, []); // Empty dependency array ensures this runs only once on initial render
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

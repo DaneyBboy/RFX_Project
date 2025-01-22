@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AdminPrice() {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState([
     {
       Srno: "1",

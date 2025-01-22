@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Use useParams to get the rfxNumber from URL
-import { Container, Paper, Typography, Grid, Button, Box} from '@mui/material';
+import { Container, Paper, Typography, Grid, Button, Box } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 
 export default function RfxDetail() {
 
+  const navigate = useNavigate();
+  const role = localStorage.getItem('role')
+  console.log(role)
 
   const { rfxNumber } = useParams(); // Extract rfxNumber from URL using useParams
   const [rfxData, setRfxData] = useState(null);
@@ -51,94 +55,112 @@ export default function RfxDetail() {
   if (rfxData) {
     return (
       <Container maxWidth="md" sx={{ mt: 4, p: 2 }}>
-      <Paper elevation={3} sx={{ p: 3 }}>
-        <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
-          RFX Details
-        </Typography>
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
+            RFX Details
+          </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Typography variant="h5">RFX Number: {rfxData.rfxNumber}</Typography>
-          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="h5">RFX Number: {rfxData.rfxNumber}</Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Proposal Criteria:
-            </Typography>
-            <Typography variant="body1">{rfxData.proposalCriteria}</Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Proposal Criteria:
+              </Typography>
+              <Typography variant="body1">{rfxData.proposalCriteria}</Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Contact Person:
-            </Typography>
-            <Typography variant="body1">{rfxData.contactPerson}</Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Contact Person:
+              </Typography>
+              <Typography variant="body1">{rfxData.contactPerson}</Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Date Issued:
-            </Typography>
-            <Typography variant="body1">
-              {new Date(rfxData.dateIssued).toLocaleDateString()}
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Date Issued:
+              </Typography>
+              <Typography variant="body1">
+                {new Date(rfxData.dateIssued).toLocaleDateString()}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Submission Date:
-            </Typography>
-            <Typography variant="body1">
-              {new Date(rfxData.submissionDate).toLocaleDateString()}
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Submission Date:
+              </Typography>
+              <Typography variant="body1">
+                {new Date(rfxData.submissionDate).toLocaleDateString()}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Purpose:
-            </Typography>
-            <Typography variant="body1">{rfxData.purpose}</Typography>
-          </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Purpose:
+              </Typography>
+              <Typography variant="body1">{rfxData.purpose}</Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Project Goals:
-            </Typography>
-            <Typography variant="body1">{rfxData.projectGoals}</Typography>
-          </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Project Goals:
+              </Typography>
+              <Typography variant="body1">{rfxData.projectGoals}</Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Scope of Work:
-            </Typography>
-            <Typography variant="body1">{rfxData.scopeOfWork}</Typography>
-          </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Scope of Work:
+              </Typography>
+              <Typography variant="body1">{rfxData.scopeOfWork}</Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              File Upload:
-            </Typography>
-            <Box>
-              <Button
-                variant="contained"
-                sx={{
-                  mt: 2,
-                  bgcolor: 'primary.main',
-                  color: '#fff',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                }}
-                href={rfxData.fileUrl}
-                download
-              >
-                Download File
-              </Button>
-            </Box>
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                File Upload:
+              </Typography>
+              <Box>
+                <Button
+                  variant="contained"
+                  sx={{
+                    mt: 2,
+                    bgcolor: 'primary.main',
+                    color: '#fff',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    },
+                  }}
+                  href={rfxData.fileUrl}
+                  download
+                >
+                  Download File
+                </Button>
+                {role === 'vendor' && (
+                  <Button
+                    variant="contained"
+                    sx={{
+                      mt: 2,
+                      ml: '30px',
+                      bgcolor: 'primary.main',
+                      color: '#fff',
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                      },
+                    }}
+                    onClick={()=>navigate(`/pricesubmit/${rfxData.rfxNumber}`)}
+                  >
+                    Click here to Participate
+                  </Button>
+                )}
+
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
     );
   }
 
