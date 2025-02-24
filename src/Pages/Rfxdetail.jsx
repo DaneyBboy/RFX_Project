@@ -22,6 +22,7 @@ export default function RfxDetail() {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
+        
         const results = await response.json();
         setRfxData(results); // Set the fetched data to state
         setLoading(false); // Set loading to false once data is fetched
