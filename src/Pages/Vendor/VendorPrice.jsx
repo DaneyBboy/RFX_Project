@@ -30,9 +30,11 @@ export default function VendorPriceBid() {
           throw new Error("Failed to fetch data");
         }
         const results = await response.json();
-        setFormData(Array.isArray(results) ? results : []);
+        // Extract items from the first object in the array
+        setFormData(results[0]?.items || []);
       } catch (error) {
         console.error("Error fetching items:", error);
+        setFormData([]); // Fallback to empty array on error
       }
     };
     fetchItems();
@@ -43,7 +45,7 @@ export default function VendorPriceBid() {
     setFormData((prev) => {
       const updatedData = [...prev];
       updatedData[index].unitRate = value;
-      updatedData[index].totalPrice = (updatedData[index].quantity * parseFloat(value)).toFixed(2);
+      updatedData[index].totalPrice = (updatedData[index].quantity * parseFloat(value || 0)).toFixed(2);
       return updatedData;
     });
   };
@@ -59,8 +61,8 @@ export default function VendorPriceBid() {
         description,
         quantity,
         uom,
-        unitRate: parseFloat(unitRate),
-        totalPrice: parseFloat(totalPrice)
+        unitRate: parseFloat(unitRate) || 0,
+        totalPrice: parseFloat(totalPrice) || 0
       }))
     };
 

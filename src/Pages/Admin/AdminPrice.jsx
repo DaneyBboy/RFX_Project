@@ -52,10 +52,11 @@ export default function AdminPrice() {
   const handleClick = async () => {
     try {
       // Prepare data to send to the backend
-      const dataToSubmit = formData.map((item) => ({
+      const dataToSubmit = {
         rfxNumber: JSON.parse(localStorage.getItem('rfxNumber')),
-        Srno: item.Srno,
-        itemName: item.itemName,
+        items : formData.map((item) => ({
+          Srno: item.Srno,
+          itemName: item.itemName,
         description: item.description,
         quantity: parseFloat (item.quantity) || 0,
         uom: item.uom || 0,
@@ -63,7 +64,11 @@ export default function AdminPrice() {
         totalPrice: item.quantity && item.unitRate
           ? (parseFloat(item.quantity) * parseFloat(item.unitRate)).toFixed(2)
           : 0.00,
-      }));
+        }
+        
+        
+      ))
+    };
 
       // Send data to backend using fetch
       const response = await fetch("http://localhost:4000/price/create", {
