@@ -8,7 +8,7 @@ export default function Rfx() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:4000/rfx/list');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/rfx/list`);
         const results = await response.json();
 
         if (Array.isArray(results)) {

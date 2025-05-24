@@ -96,7 +96,7 @@ export default function Rfxcreation() {
           console.error('No token found');
           return; // Handle the case where no token is available
         }
-        const response = await fetch('http://localhost:4000/rfx/createnew', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/rfx/createnew`, {
           method: "POST",
           body: form,
           // headers: {

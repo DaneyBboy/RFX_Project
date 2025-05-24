@@ -25,7 +25,7 @@ export default function VendorPriceBid() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/price/getprice/${rfxNumber}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/price/getprice/${rfxNumber}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -67,7 +67,7 @@ export default function VendorPriceBid() {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/price/submit", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/price/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

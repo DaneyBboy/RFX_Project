@@ -71,7 +71,7 @@ export default function AdminPrice() {
     };
 
       // Send data to backend using fetch
-      const response = await fetch("http://localhost:4000/price/create", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/price/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
