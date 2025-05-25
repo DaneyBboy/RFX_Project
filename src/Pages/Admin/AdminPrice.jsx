@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import React, { useState } from "react";
-import BasicModal from "/home/daney/Desktop/Rfx_project/RFX_Project/src/Components/BasicModal.jsx"
+import BasicModal from "../../Components/BasicModal";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminPrice() {
